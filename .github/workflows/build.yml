@@ -1,0 +1,25 @@
+name: Chocolatey Package Build
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Chocolatey
+        run: Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+      - name: Install Chocolatey Pack
+        run: choco install chocolatey
+      - name: Build Package
+        run: choco pack
+      - name: Upload Package
+        uses: actions/upload-artifact@v2
+        with:
+          name: teraterm5
+          path: teraterm5.1.0.0.nupkg
